@@ -1,12 +1,12 @@
 import pandas as pd
 import requests
-import os
+import streamlit as st
 
 all_data = None
 data_by_team = None
 summaries_by_team = None
 
-tba_api_key = tba_api_key = os.environ.get('TBA_API_KEY')
+tba_api_key = tba_api_key = st.secrets["TBA_API_KEY"]
 headers = {'X-TBA-Auth-Key': tba_api_key}
 
 
