@@ -26,9 +26,9 @@ def update_data():
     
 
     # generate team summaries
-    summaries_by_team = pd.Series()
+    summaries_by_team = {}
     for team_number, df in data_by_team.items():
-        summaries_by_team[team_number] = df.mean(numeric_only=True)
+        means_by_team = df.mean(numeric_only=True)
+        maxes_by_team = df.max(numeric_only=True)
+        summaries_by_team[team_number] = pd.Series({'mean': means_by_team, 'max': maxes_by_team})
 
-update_data()
-print(summaries_by_team)
