@@ -1,11 +1,12 @@
 import pandas as pd
 import requests
+import os
 
 all_data = None
 data_by_team = None
 summaries_by_team = None
 
-tba_api_key = '8wIJiuRVA565E415VcjYQVuKJNIL76XyMMFOEGsaLC4RDI4uBGUBA4hi3lanWYEr'
+tba_api_key = tba_api_key = os.environ.get('TBA_API_KEY')
 headers = {'X-TBA-Auth-Key': tba_api_key}
 
 
