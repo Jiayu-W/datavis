@@ -1,5 +1,7 @@
 import streamlit as st
 import data_handling as data
+from st_aggrid import AgGrid, GridOptionsBuilder
+import pandas as pd
 
 data.update_data()
 
@@ -15,12 +17,12 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# initialize session state
+# initialize session states
 if "show_charts" not in st.session_state:
     st.session_state["team_data"] = True
 
 
-# 4 symmetrical buttons in a row
+# 4 buttons
 cols = st.columns(4)
 button_labels = ["Team Data", "Match Strategy", "Picklist", "Rankings"]
 
@@ -29,11 +31,11 @@ for i, col in enumerate(cols):
         if st.button(button_labels[i], key=f"btn{i+1}"):
             st.session_state["team_data"] = (i == 0)
 
-# show/hide data
+# team datavis
 if st.session_state["team_data"]:
     st.header("Team Data")
 
-    team_numbers = list(data.data_by_team.keys().sort_values())
+    team_numbers = sorted(data.data_by_team.keys())
     selected_team = st.selectbox("Select a team", team_numbers)
 
     data.generate_summary(selected_team)
@@ -44,7 +46,23 @@ if st.session_state["team_data"]:
 
     st.header(f"Data for Team {selected_team}")
 
-    for index, row in team_df.iterrows():
-        checkbox_label = f"Match {row['Scouting ID'].rsplit('_', 1)[-1]}"  # Customize label based on a column
-        if st.checkbox(checkbox_label, key=f"checkbox_{index}"):
-            team_df.at[index, 'team_number'] = 0
+    st.subheader("Match Data Table (with Checkboxes)")
+
+    selected_rows = team_df[team_df.get('use_data', pd.Series([False] * len(team_df))).fillna(False) == True].to_dict('records')
+    display_df = team_df.drop(columns=['use_data'], errors='ignore').reset_index(drop=True)
+
+    # make scroll table
+    gb = GridOptionsBuilder.from_dataframe(display_df)
+    gb.configure_selection('multiple', use_checkbox=True)
+    gb.configure_grid_options(domLayout='normal')
+    grid_options = gb.build()
+
+    grid_response = AgGrid(
+        display_df,
+        gridOptions=grid_options,
+        update_mode='SELECTION_CHANGED',
+        allow_unsafe_jscode=True,
+        theme='streamlit',
+        height=400,
+        selected_rows=selected_rows
+    )

@@ -16,3 +16,20 @@
     border-radius: 0;
     border: none;
 }
+.scrollable-table-container {
+width: 80%;        /* Adjust width as needed */
+height: 300px;     /* Set height to portion of screen */
+overflow: auto;    /* Enables scrollbars when content overflows */
+border: 1px solid #ccc;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+}
+
+th, td {
+border: 1px solid #999;
+padding: 8px;
+text-align: left;
+}
