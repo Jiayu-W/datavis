@@ -6,7 +6,6 @@ if 'data_by_team' not in globals():
     data_by_team = {}
 if 'used_data_by_team' not in globals():
     used_data_by_team = {}
-summaries_by_team = None
 if 'all_data' not in globals():
     all_data = pd.DataFrame()
 
@@ -26,6 +25,7 @@ def update_data():
     # add new data
     all_data = pd.concat([all_data, data_import], ignore_index=True)
     all_data = all_data.drop_duplicates(subset=all_data.columns.difference(['use_data']), keep='first', ignore_index=True)
+
     # split data by team
     for team_number in all_data['Team Number'].unique():
         if team_number not in data_by_team:
@@ -40,15 +40,3 @@ def update_data_visibility(team, df):
     global data_by_team
     global used_data_by_team
     used_data_by_team[team] = df.drop(df[df['Use Data'] == False].index)
-
-
-def generate_summary(team):
-    global data_by_team
-    global summaries_by_team
-    if summaries_by_team is None:
-        summaries_by_team = {}
-    df = data_by_team.get(team)
-    if df is not None:
-        means_by_team = df.mean(numeric_only=True)
-        maxes_by_team = df.max(numeric_only=True)
-        summaries_by_team[team] = {'mean': means_by_team.to_dict(), 'max': maxes_by_team.to_dict()}
