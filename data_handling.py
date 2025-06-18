@@ -24,7 +24,7 @@ def update_data():
 
     # add new data
     all_data = pd.concat([all_data, data_import], ignore_index=True)
-    all_data = all_data.drop_duplicates(subset=all_data.columns.difference(['use_data']), keep='first', ignore_index=True)
+    all_data = all_data.drop_duplicates(subset=all_data.columns.difference(['Use Data']), keep='first', ignore_index=True)
 
     # split data by team
     for team_number in all_data['Team Number'].unique():
@@ -32,7 +32,7 @@ def update_data():
             data_by_team[team_number] = all_data[all_data['Team Number'] == team_number].copy()
         else:
             data_by_team[team_number] = pd.concat([data_by_team[team_number], all_data[all_data['Team Number'] == team_number].copy()], ignore_index=True)
-            data_by_team[team_number] = data_by_team[team_number].drop_duplicates(subset=all_data.columns.difference(['use_data']), keep='first', ignore_index=True)
+            data_by_team[team_number] = data_by_team[team_number].drop_duplicates(subset=all_data.columns.difference(['Use Data']), keep='first', ignore_index=True)
         data_by_team[team_number].reset_index(drop=True, inplace=True)
         data_by_team[team_number].index+=1
 

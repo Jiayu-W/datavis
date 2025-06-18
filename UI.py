@@ -63,10 +63,10 @@ if st.session_state["team_data"]:
             )
         }
     )
-    print(team_df['Use Data'])
     handling.data_by_team[selected_team]=team_df
     handling.update_data_visibility(selected_team, team_df)
-    print(handling.used_data_by_team[selected_team]['Use Data'])
+    print(handling.data_by_team[selected_team])
+    print(team_df)
 
 elif st.session_state['settings']:
     print("Hello Wolrd!")
